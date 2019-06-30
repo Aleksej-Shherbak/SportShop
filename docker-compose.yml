@@ -1,0 +1,20 @@
+version: '3'
+
+networks:
+  dockerapi-dev:
+    driver: bridge 
+    
+services:
+
+  db:
+    image: postgres:latest
+    ports:
+      - "5432:5432"
+    restart: always
+    environment:
+      POSTGRES_USER: "sportshop"
+      POSTGRES_PASSWORD: "sportshop"
+      POSTGRES_DB: "sportshop"
+    networks:
+      - dockerapi-dev    
+     

@@ -1,0 +1,25 @@
+@using Web.HtmlHelpers
+@model Web.Models.ProductsListViewModel
+
+@{
+    ViewBag.Title = "Products";
+}
+
+<div class="row mb-3">
+    <div class="col-8">
+        @foreach (var p in Model.Products)
+        {
+            <partial name="ProductSummary" model="p"></partial>
+        }
+    </div>
+    <div class="col-4">
+        Something usefull here will be late
+    </div>
+</div>
+
+<div class="row">
+    <div class="pl-3">
+        @Html.PageLinks(Model.PaginInfo, 
+            x => Url.Action("List", new {page = x, category = Model.CurrentCategory}))
+    </div>
+</div>
