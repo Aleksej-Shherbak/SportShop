@@ -1,6 +1,5 @@
 using System.Linq;
 using Domains.Abstract;
-using Domains.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Web.Models;
 
