@@ -17,8 +17,10 @@ namespace Web.ViewComponents
             _repository = repository;
         }
 
-        public ViewViewComponentResult Invoke(string carrentCategory)
+        public IViewComponentResult Invoke(string currentCategory)
         {
+            ViewBag.SelectedCategory = currentCategory;
+            
             var categories = _repository.Products
                 .Select(x => x.Category)
                 .Distinct()

@@ -14,6 +14,7 @@
     },
         new
         {
-            @class = "btn btn-outline-dark btn-block btn-lg" 
+            @class = "btn btn-outline-dark btn-block btn-lg" +
+                     (link == ViewBag.SelectedCategory ? " btn-primary" : "")
         })
 }
