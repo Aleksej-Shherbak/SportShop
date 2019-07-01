@@ -6,20 +6,23 @@
 }
 
 <div class="row mb-3">
+    <div class="col-4">
+        @await Component.InvokeAsync("CategoryNav", new {currentCategory = Model.CurrentCategory})
+    </div>
     <div class="col-8">
         @foreach (var p in Model.Products)
         {
             <partial name="ProductSummary" model="p"></partial>
         }
     </div>
-    <div class="col-4">
-        @await Component.InvokeAsync("CategoryNav", new { currentCategory = Model.CurrentCategory} )
-    </div>
 </div>
 
 <div class="row">
-    <div class="pl-3">
-        @Html.PageLinks(Model.PaginInfo, 
-            x => Url.Action("List", new {page = x, category = Model.CurrentCategory}))
+    <div class="col-4"></div>
+    <div class="col-8">
+        <div class="pl-3 mt-5">
+            @Html.PageLinks(Model.PaginInfo,
+                x => Url.Action("List", new {page = x, category = Model.CurrentCategory}))
+        </div>
     </div>
 </div>
