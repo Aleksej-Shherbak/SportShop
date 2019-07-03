@@ -39,6 +39,8 @@ namespace Domains.Entities
         {
             return lineCollection.Sum(e => e.Product.Price * e.Quantity);
         }
+
+        public IEnumerable<CartLine> Lines => lineCollection;
     }
 
     public class CartLine
