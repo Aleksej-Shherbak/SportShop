@@ -9,7 +9,7 @@ namespace Web.Routes
             app.UseMvc(routes =>
             {
                 // /
-                routes.MapRoute(null, "", new
+                routes.MapRoute("home", "", new
                 {
                     controller = "Products",
                     action = "List",
