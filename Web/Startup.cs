@@ -1,13 +1,14 @@
 ﻿using System;
 using Domains.Abstract;
 using Domains.Concrete;
+using Domains.Entities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Web.Infrastructure.Binders;
+using Web.Models;
 using Web.Routes;
 
 
@@ -39,14 +40,15 @@ namespace Web
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
+            
+            services.AddScoped<Cart>(CartSession.GetCart);
 
-    services.AddMvc(
-        options =>
-        {
-            options.ModelBinderProviders.Insert(0, new CartModelBinderProvider());
-            options.EnableEndpointRouting = true;
+            services.AddMvc(
+                options =>
+                {
+                    options.EnableEndpointRouting = true;
 
-        }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+                }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.AddEntityFrameworkNpgsql()
                 .AddDbContext<ApplicationContext>()
@@ -54,6 +56,8 @@ namespace Web
 
             services.AddTransient<IProductRepository, ProductRepository>();
             
+            services.AddHttpContextAccessor();
+
             services.AddDistributedMemoryCache();
         }
 
