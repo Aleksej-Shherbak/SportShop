@@ -17,65 +17,40 @@ namespace Web.Controllers
             _repository = repository;
         }
 
-        public RedirectToActionResult AddToCart(int id)
+        public RedirectToActionResult AddToCart(Cart cart, int id)
         {
             var product = _repository.Products.FirstOrDefault(p => p.Id == id);
 
             if (product != null)
             {
-                var cart = GetCart();
                 cart.AddItem(product, 1);
-                SaveCart(cart);
+                HttpContext.Session.SetObject("cart", cart);
             }
 
             return RedirectToAction("Index");
         }
 
-        public RedirectToActionResult RemoveFromCart(int id)
+        public RedirectToActionResult RemoveFromCart(Cart cart, int id)
         {
             Product product = _repository.Products.FirstOrDefault(p => p.Id == id);
 
             if (product != null)
             {
-                GetCart().RemoveLine(product);
-            }
-            
-            return RedirectToAction("Index");
-        }
-
-        private Cart GetCart()
-        {
-            Cart cart = HttpContext.Session.GetObject<Cart>("cart");
-
-            if (cart == null)
-            {
-                cart = new Cart();
-                
+                cart.RemoveLine(product);
                 HttpContext.Session.SetObject("cart", cart);
             }
 
-            return cart;
-        }
-
-        private Cart SaveCart(Cart cart)
-        {
-            if (cart == null)
-            {
-                cart = HttpContext.Session.GetObject<Cart>("cart");
-            }
-
-            HttpContext.Session.SetObject("cart", cart);
-            
-            return HttpContext.Session.GetObject<Cart>("cart");
+            return RedirectToAction("Index");
         }
         
-        public ViewResult Index()
+        public ViewResult Index(Cart cart)
         {
-            return View(new CartIndexViewModel
+            var res = new CartIndexViewModel
             {
-                Cart = GetCart(),
+                Cart = cart,
                 ReturnUrl = Url.RouteUrl("Home")
-            });
+            };
+            return View(res);
         }
     }
 }

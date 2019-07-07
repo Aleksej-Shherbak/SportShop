@@ -41,6 +41,7 @@ namespace Domains.Entities
         }
 
         public IEnumerable<CartLine> Lines => lineCollection;
+        
     }
 
     public class CartLine

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Web.Infrastructure.Binders;
 using Web.Routes;
 
 
@@ -39,8 +40,13 @@ namespace Web
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.AddMvc(options => options.EnableEndpointRouting = true)
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+    services.AddMvc(
+        options =>
+        {
+            options.ModelBinderProviders.Insert(0, new CartModelBinderProvider());
+            options.EnableEndpointRouting = true;
+
+        }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.AddEntityFrameworkNpgsql()
                 .AddDbContext<ApplicationContext>()
