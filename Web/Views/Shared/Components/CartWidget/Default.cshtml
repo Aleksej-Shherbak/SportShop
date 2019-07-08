@@ -1,0 +1,10 @@
+@model Domains.Entities.Cart
+
+<div>
+    <b>
+        @Html.ActionLink("Checkout Your Cart:", "Index", "Cart",
+            new {}, new {@class="text-info"})
+    </b>
+    @Model.Lines.Sum(x => x.Quantity) item(s),
+    @Model.ComputeTotalValue().ToString("c")
+</div>

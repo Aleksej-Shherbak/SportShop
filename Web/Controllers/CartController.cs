@@ -48,8 +48,7 @@ namespace Web.Controllers
         {
             var res = new CartIndexViewModel
             {
-                Cart = cart,
-                ReturnUrl = Url.RouteUrl("Home")
+                Cart = cart
             };
             return View(res);
         }

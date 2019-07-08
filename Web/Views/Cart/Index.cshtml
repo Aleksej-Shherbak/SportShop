@@ -13,6 +13,7 @@
         <td>Item</td>
         <td class="text-right">Price</td>
         <td class="text-right">Subtotal</td>
+        <td></td>
     </tr>
     </thead>
     <tbody>
@@ -24,6 +25,13 @@
             <td class="text-right">@line.Product.Price.ToString("c")</td>
             <td class="text-right">
                 @((line.Quantity * line.Product.Price).ToString("c"))
+            </td>
+            <td>
+                @using (Html.BeginForm("RemoveFromCart", "Cart"))
+                {
+                    @Html.Hidden("Id", line.Product.Id)
+                    <input class="btn btn-sm btn-warning" type="submit" value="Remove" />
+                }
             </td>
         </tr>
     }
