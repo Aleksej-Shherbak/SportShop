@@ -52,5 +52,10 @@ namespace Web.Controllers
             };
             return View(res);
         }
+
+        public ViewResult Checkout()
+        {
+            return View(new ShippingDetails());
+        }
     }
 }

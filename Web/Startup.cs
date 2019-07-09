@@ -55,6 +55,8 @@ namespace Web
                 .BuildServiceProvider();
 
             services.AddTransient<IProductRepository, ProductRepository>();
+
+            services.AddTransient<IOrderProcessor, EmailOrderProcessor>();
             
             services.AddHttpContextAccessor();
 
