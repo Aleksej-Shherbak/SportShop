@@ -12,12 +12,12 @@ namespace Web.Controllers
     {
         private readonly IProductRepository _repository;
 
-        private readonly Cart cart;
+        private readonly Cart _cart;
 
         public CartController(IProductRepository repository, Cart cart)
         {
             _repository = repository;
-            this.cart = cart;
+            _cart = cart;
         }
 
         public RedirectToActionResult AddToCart(int id)
@@ -26,7 +26,7 @@ namespace Web.Controllers
 
             if (product != null)
             {
-                cart.AddItem(product, 1);
+                _cart.AddItem(product, 1);
             }
 
             return RedirectToAction("Index");
@@ -38,7 +38,7 @@ namespace Web.Controllers
 
             if (product != null)
             {
-                cart.RemoveLine(product);
+                _cart.RemoveLine(product);
             }
 
             return RedirectToAction("Index");
@@ -48,7 +48,7 @@ namespace Web.Controllers
         {
             var res = new CartIndexViewModel
             {
-                Cart = cart
+                Cart = _cart
             };
             return View(res);
         }

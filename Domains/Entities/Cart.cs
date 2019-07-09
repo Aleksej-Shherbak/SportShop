@@ -27,7 +27,19 @@ namespace Domains.Entities
 
         public virtual void RemoveLine(Product product)
         {
-            lineCollection.RemoveAll(l => l.Product.Id == product.Id);
+            var productLine = lineCollection.FirstOrDefault(l => l.Product.Id == product.Id);
+
+            if (productLine != null)
+            {
+                if (productLine.Quantity > 1)
+                {
+                    productLine.Quantity = productLine.Quantity - 1;
+                }
+                else
+                {
+                    lineCollection.RemoveAll(l => l.Product.Id == product.Id);
+                }
+            }
         }
 
         public virtual void Clear()
