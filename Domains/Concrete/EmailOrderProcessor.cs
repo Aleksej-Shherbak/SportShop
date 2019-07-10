@@ -1,48 +1,37 @@
+using System;
 using System.Net;
 using System.Net.Mail;
 using System.Text;
 using Domains.Abstract;
 using Domains.Entities;
+using Microsoft.Extensions.Configuration;
 
 namespace Domains.Concrete
 {
-    public class EmailSettings
-    {
-        public string MailToAddress = "";
-        public string MailFromAddress = "";
-        public bool UseSsl = true;
-        public string Username = "";
-        public string Password = "";
-        public string ServerName = "";
-        public int ServerPort = 578;
-        public bool WriteAsFile = false;
-        public string FileLocation = "";
-    }
-
     public class EmailOrderProcessor : IOrderProcessor
     {
-        private readonly EmailSettings _emailSettings;
+        private readonly IConfiguration _configuration;
 
-        public EmailOrderProcessor(EmailSettings emailSettings)
+        public EmailOrderProcessor(IConfiguration configuration)
         {
-            _emailSettings = emailSettings;
+            _configuration = configuration;
         }
 
         public void ProcessOrder(Cart cart, ShippingDetails shippingDetails)
         {
             using (var smtpClient = new SmtpClient())
             {
-                smtpClient.EnableSsl = _emailSettings.UseSsl;
-                smtpClient.Host = _emailSettings.ServerName;
-                smtpClient.Port = _emailSettings.ServerPort;
+                smtpClient.EnableSsl = _configuration.GetValue<bool>("SmtpSettings:UseSsl");
+                smtpClient.Host = _configuration["SmtpSettings:Server"];
+                smtpClient.Port = _configuration.GetValue<int>("SmtpSettings:Port");
                 smtpClient.UseDefaultCredentials = false;
-                smtpClient.Credentials = new NetworkCredential(_emailSettings.Username,
-                    _emailSettings.Password);
+                smtpClient.Credentials = new NetworkCredential(_configuration["SmtpSettings:Username"],
+                    _configuration["SmtpSettings:Password"]);
 
-                if (_emailSettings.WriteAsFile)
+                if (_configuration.GetValue<bool>("SmtpSettings:WriteAsFile"))
                 {
                     smtpClient.DeliveryMethod = SmtpDeliveryMethod.SpecifiedPickupDirectory;
-                    smtpClient.PickupDirectoryLocation = _emailSettings.FileLocation;
+                    smtpClient.PickupDirectoryLocation = _configuration["SmtpSettings:FileLocation"];
                     smtpClient.EnableSsl = false;
                 }
 
@@ -73,10 +62,10 @@ namespace Domains.Concrete
                 body.AppendFormat("Gift wrap: {0}", shippingDetails.GiftWrap ? "Yes" : "No");
                 
                 MailMessage mailMessage = new MailMessage(
-                    _emailSettings.MailFromAddress, _emailSettings.MailToAddress,
+                    _configuration["SmtpSettings:MailFromAddress"], _configuration["SmtpSettings:MailToAddress"],
                     "New order submitted", body.ToString());
 
-                if (_emailSettings.WriteAsFile)
+                if (_configuration.GetValue<bool>("SmtpSettings:WriteAsFile"))
                 {
                     mailMessage.BodyEncoding = Encoding.UTF8;
                 }
