@@ -1,9 +1,10 @@
+using System.Threading.Tasks;
 using Domains.Entities;
 
 namespace Domains.Abstract
 {
     public interface IOrderProcessor
     {
-        void ProcessOrder(Cart cart, ShippingDetails shippingDetails);
+        Task ProcessOrder(Cart cart, ShippingDetails shippingDetails);
     }
 }

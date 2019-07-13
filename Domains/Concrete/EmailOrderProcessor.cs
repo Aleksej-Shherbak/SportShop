@@ -2,6 +2,7 @@ using System;
 using System.Net;
 using System.Net.Mail;
 using System.Text;
+using System.Threading.Tasks;
 using Domains.Abstract;
 using Domains.Entities;
 using Microsoft.Extensions.Configuration;
@@ -17,7 +18,7 @@ namespace Domains.Concrete
             _configuration = configuration;
         }
 
-        public void ProcessOrder(Cart cart, ShippingDetails shippingDetails)
+        public async Task ProcessOrder(Cart cart, ShippingDetails shippingDetails)
         {
             using (var smtpClient = new SmtpClient())
             {
@@ -48,6 +49,7 @@ namespace Domains.Concrete
                     body.AppendFormat("{0} x {1} subtotal: {2:c})", line.Quantity, line.Product.Name, subtotal);
                 }
 
+                body.AppendLine("");
                 body.AppendLine("---");
                 body.AppendLine("Ship to:");
                 body.AppendLine(shippingDetails.Name);
@@ -60,7 +62,7 @@ namespace Domains.Concrete
 
                 body.AppendLine("---");
                 body.AppendFormat("Gift wrap: {0}", shippingDetails.GiftWrap ? "Yes" : "No");
-                
+
                 MailMessage mailMessage = new MailMessage(
                     _configuration["SmtpSettings:MailFromAddress"], _configuration["SmtpSettings:MailToAddress"],
                     "New order submitted", body.ToString());
@@ -69,8 +71,19 @@ namespace Domains.Concrete
                 {
                     mailMessage.BodyEncoding = Encoding.UTF8;
                 }
-                
-                smtpClient.Send(mailMessage);
+
+                try
+                {
+                    await smtpClient.SendMailAsync(mailMessage);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    
+                    // TODO notify developers                    
+
+                    throw;
+                }
             }
         }
     }

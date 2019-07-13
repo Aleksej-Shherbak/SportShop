@@ -62,7 +62,7 @@ namespace Tests
         }
 
         [Test]
-        public void Can_Remove_Line()
+        public void Can_Remove_Item()
         {
             Product p1 = new Product
             {
@@ -90,11 +90,14 @@ namespace Tests
             cart.AddItem(p2, 1);
             
             cart.RemoveLine(p2);
+            cart.RemoveLine(p1);
+
             
-            Assert.AreEqual(cart.Lines.Count(c => c.Product == p2), 0);
+            Assert.AreEqual(cart.Lines.FirstOrDefault(c => c.Product == p2)?.Quantity, 3);
             Assert.AreEqual(cart.Lines.Count(), 2);
         }
 
+        [Test]
         public void Calculate_Cart_Total()
         {
             Product p1 = new Product
@@ -119,9 +122,10 @@ namespace Tests
 
             decimal result = cart.ComputeTotalValue();
             
-            Assert.AreEqual(result, 400);
+            Assert.AreEqual(result, 500);
         }
 
+        [Test]
         public void Can_Clean_Cart()
         {
             Product p1 = new Product

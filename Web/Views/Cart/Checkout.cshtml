@@ -1,12 +1,24 @@
 @model Domains.Entities.ShippingDetails
 
 @{
-    ViewBag.Title = "title";
+    ViewBag.Title = "Checkout your cart";
     Layout = "_Layout";
+    var allErrors = ViewContext.ViewData.ModelState.Values.SelectMany(v => v.Errors.Select(b => b.ErrorMessage));
+
 }
 
 <h2>Check out now</h2>
 <p>Please enter your details, and we'll ship your goods right away!</p>
+
+<div class="row mb-4">
+    <div class="col-12">
+        @foreach (var error in allErrors)
+        {
+            <p class="alert-danger p-1 mb-1">@error</p>
+        }        
+    </div>
+</div>
+
 
 @using (Html.BeginForm())
 {

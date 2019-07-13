@@ -1,4 +1,6 @@
+using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Domains.Abstract;
 using Domains.Entities;
 using Microsoft.AspNetCore.Mvc;
@@ -14,10 +16,14 @@ namespace Web.Controllers
 
         private readonly Cart _cart;
 
-        public CartController(IProductRepository repository, Cart cart)
+        private readonly IOrderProcessor _orderProcessor;
+
+
+        public CartController(IProductRepository repository, Cart cart, IOrderProcessor orderProcessor)
         {
             _repository = repository;
             _cart = cart;
+            _orderProcessor = orderProcessor;
         }
 
         public RedirectToActionResult AddToCart(int id)
@@ -43,7 +49,7 @@ namespace Web.Controllers
 
             return RedirectToAction("Index");
         }
-        
+
         public ViewResult Index()
         {
             var res = new CartIndexViewModel
@@ -56,6 +62,26 @@ namespace Web.Controllers
         public ViewResult Checkout()
         {
             return View(new ShippingDetails());
+        }
+
+        [HttpPost]
+        public ViewResult Checkout(ShippingDetails shippingDetails)
+        {
+            if (!_cart.Lines.Any())
+            {
+                ModelState.AddModelError("", "Sorry, your cart is empty");
+            }
+
+            if (ModelState.IsValid)
+            {
+                _orderProcessor.ProcessOrder(_cart, shippingDetails);
+
+                _cart.Clear();
+
+                return View("Completed");
+            }
+
+            return View(shippingDetails);
         }
     }
 }
