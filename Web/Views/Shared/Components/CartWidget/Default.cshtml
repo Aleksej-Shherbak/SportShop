@@ -2,8 +2,7 @@
 
 <div>
     <b>
-        @Html.ActionLink("Checkout Your Cart:", "Index", "Cart",
-            new {}, new {@class="text-info"})
+        <a href="@Url.Action("Index", "Cart")">Checkout Your <i class="fas fa-shopping-cart"></i></a>
     </b>
     @Model.Lines.Sum(x => x.Quantity) item(s),
     @Model.ComputeTotalValue().ToString("c")
