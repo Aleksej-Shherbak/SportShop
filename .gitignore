@@ -3,5 +3,5 @@
 */obj/
 */wwwroot/css
 */wwwroot/js
-*/wwwroot/lib
+*/wwwroot/node_modules
 */appsettings.Local.json
