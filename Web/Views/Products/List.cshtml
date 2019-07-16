@@ -6,10 +6,10 @@
 }
 
 <div class="row mb-3">
-    <div class="col-4">
+    <div class="col-sm-3 d-none d-sm-block">
         @await Component.InvokeAsync("CategoryNav", new {currentCategory = Model.CurrentCategory})
     </div>
-    <div class="col-8">
+    <div class="col-sm-8 col-xs-12">
         @foreach (var p in Model.Products)
         {
             <partial name="ProductSummary" model="p"></partial>

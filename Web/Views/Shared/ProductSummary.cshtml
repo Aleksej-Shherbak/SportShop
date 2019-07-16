@@ -1,19 +1,24 @@
-@using Microsoft.AspNetCore.Http.Extensions
 @model Domains.Entities.Product
 
-<div class="col-12 border-bottom mb-2">
-    <h3>
-        <strong>@Model.Name</strong>
-        <span class="label alert-primary float-right box-shadow p-1">@Model.Price.ToString("c") </span>
-    </h3>
+<div class="row border-bottom mb-2">
+    <div class="col-10">
+        <h4>
+            <p>
+                <strong>@Model.Name</strong>
+            </p>
+            <p>
+                @Model.Description
+            </p>
+        </h4>
+    </div>
+    <div class="col-2 d-flex flex-column align-items-start ">
+        <span class="alert-primary box-shadow mb-1 p-1">@Model.Price.ToString("c") </span>
 
-    @using (Html.BeginForm("AddToCart", "Cart", FormMethod.Post))
-    {
-        <div class="pull-right">
+        @using (Html.BeginForm("AddToCart", "Cart", FormMethod.Post,
+            new {@class = "form"}))
+        {
             @Html.HiddenFor(x => x.Id)
             <input type="submit" class="btn btn-success" value="Add to cart"/>
-        </div>
-    }
-    
-    @Model.Description
+        }
+    </div>
 </div>
