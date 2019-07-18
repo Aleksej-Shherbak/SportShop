@@ -1,4 +1,6 @@
+using System.Linq;
 using Domains.Abstract;
+using Domains.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Controllers
@@ -17,9 +19,11 @@ namespace Web.Controllers
             return View(_repository.Products);
         }
 
-        public IActionResult Edit()
+        public ViewResult Edit(int productId)
         {
-            throw new System.NotImplementedException();
+            Product product = _repository.Products.FirstOrDefault(p => p.Id == productId);
+
+            return View(product);
         }
 
         public IActionResult Delete()
