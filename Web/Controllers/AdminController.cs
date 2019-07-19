@@ -16,14 +16,30 @@ namespace Web.Controllers
 
         public ViewResult Index()
         {
-            return View(_repository.Products);
+            return View(_repository.Products.OrderBy(p => p.Id));
         }
 
-        public ViewResult Edit(int productId)
+        public ViewResult Edit(int id)
         {
-            Product product = _repository.Products.FirstOrDefault(p => p.Id == productId);
+            Product product = _repository.Products.FirstOrDefault(p => p.Id == id);
 
             return View(product);
+        }
+        
+        [HttpPost]
+        public IActionResult Edit(Product product)
+        {
+            if (ModelState.IsValid)
+            {
+                _repository.SaveProduct(product);
+                TempData["message"] = string.Format("{0} has been saved", product.Name);
+
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                return View(product);
+            }
         }
 
         public IActionResult Delete()

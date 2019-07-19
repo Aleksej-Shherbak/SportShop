@@ -1,8 +1,50 @@
 @model Domains.Entities.Product
 
 @{
-    ViewBag.Title = "title";
+    ViewBag.Title = "Edit";
     Layout = "_AdminLayout";
 }
 
-<h2>title</h2>
+
+<div class="card ">
+    @using (Html.BeginForm())
+    {
+        <div class="card-header">
+            <h3>Edit @Model.Name</h3>
+        </div>
+
+        <div class="card-body">
+
+            @Html.HiddenFor(m => m.Id)
+
+            @foreach (var property in ViewData.ModelMetadata.Properties)
+            {
+                if (property.Name == "Id" || property.Name == "CreatedAt")
+                {
+                    continue;
+                }
+
+                <div class="form-group">
+                    <label@(property.DisplayName ?? property.Name)></label>
+                    @if (property.PropertyName == "Description")
+                    {
+                        @Html.TextArea(property.PropertyName, null,
+                            new {@class = "form-control", rows = 5})
+                    }
+                    else
+                    {
+                        @Html.TextBox(property.PropertyName, null,
+                            new {@class = "form-control"})
+                    }
+                </div>
+            }
+        </div>
+        <div class="card-footer d-flex flex-row justify-content-center">
+            <input type="submit" value="Save" class="btn btn-primary"/>
+
+            @Html.ActionLink("Cancel", "Index", null,
+                "", new {@class = "btn btn-danger ml-2"})
+        </div>
+    }
+
+</div>
