@@ -32,14 +32,12 @@ namespace Web.Controllers
             if (ModelState.IsValid)
             {
                 _repository.SaveProduct(product);
-                TempData["message"] = string.Format("{0} has been saved", product.Name);
+                ViewBag.message =  $"{product.Name} has been saved";
 
                 return RedirectToAction("Index");
             }
-            else
-            {
-                return View(product);
-            }
+
+            return View(product);
         }
 
         public IActionResult Delete()

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Domains.Abstract;
 using Domains.Entities;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Moq;
 using NUnit.Framework;
@@ -72,6 +73,47 @@ namespace Tests
             Product res = (Product) controller.Edit(4).ViewData.Model;
             
             Assert.IsNull(res);
+        }
+
+        [Test]
+        public void Can_Save_Valid_Changes()
+        {
+            Mock<IProductRepository> mock = new Mock<IProductRepository>();
+            
+            AdminController controller = new AdminController(mock.Object);
+            
+            Product product = new Product { Name = "Test"};
+
+            IActionResult result = controller.Edit(product);
+            
+            // Проверка того, что к хранилищу производится обращение
+            mock.Verify(m => m.SaveProduct(product));
+            
+            Assert.IsNotInstanceOf<ViewResult>(result);
+        }
+
+        [Test]
+        public void Can_Not_Save_Invalid_Changes()
+        {
+            Mock<IProductRepository> mock = new Mock<IProductRepository>();
+            
+            AdminController controller = new AdminController(mock.Object);
+            
+            Product product = new Product
+            {
+                Name = "Test"
+            };
+            
+            // Добавление ошибочного состояния
+            controller.ModelState.AddModelError("error", "error");
+
+            IActionResult result = controller.Edit(product);
+            
+            // проверка того, что обращения к хранилищу не будет
+            mock.Verify(m => m.SaveProduct(It.IsAny<Product>()), Times.Never());
+            
+            // проверка, что метод вернул ViewResult, а не редирект, как должно быть при валидных данных
+            Assert.IsInstanceOf<ViewResult>(result);
         }
     }
 }
