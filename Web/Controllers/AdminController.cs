@@ -1,7 +1,9 @@
+using System.Collections.Generic;
 using System.Linq;
 using Domains.Abstract;
 using Domains.Entities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
 namespace Web.Controllers
 {
@@ -22,21 +24,22 @@ namespace Web.Controllers
         public ViewResult Edit(int id)
         {
             Product product = _repository.Products.FirstOrDefault(p => p.Id == id);
-
+            
             return View(product);
         }
         
         [HttpPost]
-        public IActionResult Edit(Product product)
+        public ActionResult Edit(Product product)
         {
             if (ModelState.IsValid)
             {
                 _repository.SaveProduct(product);
-                ViewBag.message =  $"{product.Name} has been saved";
-
-                return RedirectToAction("Index");
+                
+                TempData["message"] = $"{product.Name} has been saved";
+                
+                return RedirectToAction("Index","Admin");
             }
-
+            
             return View(product);
         }
 

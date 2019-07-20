@@ -6,6 +6,15 @@
 }
 
 <div class="card ">
+    <div>
+        @if (TempData["message"] != null)
+        {
+            <div class="alert alert-success">
+                @TempData["message"]
+            </div>
+        }
+    </div>
+
     <div class="card-header">
         <h3>All products</h3>
     </div>
@@ -42,7 +51,7 @@
         </table>
     </div>
     <div class="card-footer d-flex flex-row justify-content-center">
-        @Html.ActionLink("Add a new product", "Create", null, 
+        @Html.ActionLink("Add a new product", "Create", null,
             "", new {@class = "btn btn-primary"})
     </div>
 </div>
