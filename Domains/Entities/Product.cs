@@ -7,7 +7,6 @@ namespace Domains.Entities
     public class Product
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        [ScaffoldColumn(false)]
         public int Id { get; set; }
         
         [Required(ErrorMessage = "Please enter a product name")]
@@ -24,8 +23,11 @@ namespace Domains.Entities
         [Range(0.01, double.MaxValue, ErrorMessage = "Please enter a correct price value")]
         public decimal Price { get; set; }
         
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        [ScaffoldColumn(false)]
         public DateTime CreatedAt { get; set; }
+
+        public Product()
+        {
+            CreatedAt = DateTime.UtcNow;
+        }
     }
 }

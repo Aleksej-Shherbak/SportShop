@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Domains.Abstract;
 using Domains.Entities;
 using Microsoft.AspNetCore.Mvc;
@@ -26,7 +27,8 @@ namespace Domains.Concrete
         {
             if (product.Id == 0)
             {
-                _applicationContext.Add(product);
+                product.CreatedAt = DateTime.UtcNow;
+                _applicationContext.Products.Add(product);
             }
             else
             {
@@ -43,6 +45,18 @@ namespace Domains.Concrete
 
             _applicationContext.SaveChanges();
         }
-        
+
+        public async Task<Product> DeleteProductAsync(int id)
+        {
+            Product product = await _applicationContext.Products.FindAsync(id);
+
+            if (product != null)
+            {
+                _applicationContext.Products.Remove(product);
+                _applicationContext.SaveChanges();
+            }
+
+            return product;
+        }
     }
 }

@@ -1,15 +1,17 @@
-using System.Collections.Generic;
+using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Domains.Abstract;
+using Domains.Concrete;
 using Domains.Entities;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
 namespace Web.Controllers
 {
     public class AdminController : Controller
     {
         private readonly IProductRepository _repository;
+        
         
         public AdminController(IProductRepository repository)
         {
@@ -18,7 +20,7 @@ namespace Web.Controllers
 
         public ViewResult Index()
         {
-            return View(_repository.Products.OrderBy(p => p.Id));
+            return View(_repository.Products.OrderByDescending(p => p.Id));
         }
 
         public ViewResult Edit(int id)
@@ -43,14 +45,22 @@ namespace Web.Controllers
             return View(product);
         }
 
-        public IActionResult Delete()
+        [HttpPost]
+        public async Task<IActionResult> Delete(int id)
         {
-            throw new System.NotImplementedException();
+            Product deletedProduct = await _repository.DeleteProductAsync(id);
+
+            if (deletedProduct != null)
+            {
+                TempData["message"] = $"{deletedProduct.Name} was deleted";
+            }
+
+            return RedirectToAction("Index");
         }
 
-        public IActionResult Create()
+        public ViewResult Create()
         {
-            throw new System.NotImplementedException();
+            return View("Edit", new Product());
         }
     }
 }

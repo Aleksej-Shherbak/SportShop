@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Domains.Abstract;
 using Domains.Entities;
 using Microsoft.AspNetCore.Http;
@@ -32,9 +33,9 @@ namespace Tests
             var products = ((IEnumerable<Product>) controller.Index().ViewData.Model).ToArray();
 
             Assert.AreEqual(products.Length, 3);
-            Assert.AreEqual("p1", products[0].Name);
+            Assert.AreEqual("p3", products[0].Name);
             Assert.AreEqual("p2", products[1].Name);
-            Assert.AreEqual("p3", products[2].Name);
+            Assert.AreEqual("p1", products[2].Name);
         }
 
         [Test]
@@ -122,6 +123,32 @@ namespace Tests
 
             // проверка, что метод вернул ViewResult, а не редирект, как должно быть при валидных данных
             Assert.IsInstanceOf<ViewResult>(result);
+        }
+
+        [Test]
+        public async Task Can_Delete_Valid_Products()
+        {
+            Product product = new Product
+            {
+                Price = 2, Name = "Test"
+            };
+            
+            Mock<IProductRepository> mock = new Mock<IProductRepository>();
+            mock.Setup(m => m.Products).Returns(new Product[]
+            {
+                new Product {Id = 1, Name = "P1"},
+                product,
+                new Product {Id = 2, Name = "P2"}
+            });
+            
+            AdminController controller = new AdminController(mock.Object);
+            var httpContext = new DefaultHttpContext();
+            var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
+            controller.TempData = tempData;
+
+            await controller.Delete(product.Id);
+            
+            mock.Verify(m => m.DeleteProductAsync(product.Id));
         }
     }
 }

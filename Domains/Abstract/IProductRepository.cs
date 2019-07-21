@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Domains.Entities;
 
 namespace Domains.Abstract
@@ -8,5 +9,7 @@ namespace Domains.Abstract
         IEnumerable<Product> Products { get; }
 
         void SaveProduct(Product product);
+
+        Task<Product> DeleteProductAsync(int id);
     }
 }

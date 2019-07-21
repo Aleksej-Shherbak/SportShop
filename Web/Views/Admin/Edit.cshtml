@@ -5,12 +5,22 @@
     Layout = "_AdminLayout";
 }
 
+<script>
+    $("form").validate();
+</script> 
 
 <div class="card ">
-    @using (Html.BeginForm())
+    @using (Html.BeginForm("Edit", "Admin"))
     {
         <div class="card-header">
-            <h3>Edit @Model.Name</h3>
+            @if (string.IsNullOrEmpty(Model.Name))
+            {
+                <div>Create a product</div>
+            }
+            else
+            {
+                <h3>Edit @Model.Name</h3>
+            }
         </div>
 
         <div class="card-body">

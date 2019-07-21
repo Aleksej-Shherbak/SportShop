@@ -22,7 +22,7 @@ namespace Web.Controllers
             {
                 Products = _repository.Products
                     .Where(p => category == null || p.Category == category)
-                    .OrderBy(p => p.CreatedAt)
+                    .OrderBy(p => p.Id)
                     .Skip((page - 1) * PageSize)
                     .Take(PageSize),
                 PaginInfo = new PaginInfo

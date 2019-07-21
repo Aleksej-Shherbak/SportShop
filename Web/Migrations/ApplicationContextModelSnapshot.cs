@@ -16,22 +16,24 @@ namespace Domains.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)
-                .HasAnnotation("ProductVersion", "2.2.4-servicing-10062")
+                .HasAnnotation("ProductVersion", "2.2.6-servicing-10079")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            modelBuilder.Entity("Web.Models.Product", b =>
+            modelBuilder.Entity("Domains.Entities.Product", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Category");
+                    b.Property<string>("Category")
+                        .IsRequired();
 
-                    b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAddOrUpdate();
+                    b.Property<DateTime>("CreatedAt");
 
-                    b.Property<string>("Description");
+                    b.Property<string>("Description")
+                        .IsRequired();
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .IsRequired();
 
                     b.Property<decimal>("Price");
 
