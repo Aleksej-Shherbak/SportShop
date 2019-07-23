@@ -1,13 +1,13 @@
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Domains.Abstract;
-using Domains.Concrete;
 using Domains.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Controllers
 {
+    [Authorize]
     public class AdminController : Controller
     {
         private readonly IProductRepository _repository;

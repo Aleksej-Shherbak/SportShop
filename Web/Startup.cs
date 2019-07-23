@@ -2,6 +2,7 @@
 using Domains.Abstract;
 using Domains.Concrete;
 using Domains.Entities;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -54,12 +55,24 @@ namespace Web
                 .BuildServiceProvider();
 
             services.AddTransient<IProductRepository, ProductRepository>();
+            services.AddTransient<IUserRepository, UserRepository>();
 
             services.AddTransient<IOrderProcessor, EmailOrderProcessor>();
             
             services.AddHttpContextAccessor();
 
             services.AddDistributedMemoryCache();
+
+            /*services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(o => o.LoginPath = new PathString("/account/login"));*/
+            
+            // установка конфигурации подключения
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(options => 
+                {
+                    options.LoginPath = new Microsoft.AspNetCore.Http.PathString("/Account/Login");
+                });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -80,6 +93,8 @@ namespace Web
             app.UseStaticFiles();
             app.UseCookiePolicy();
             app.UseSession();
+            app.UseAuthentication();
+            app.UseMvc();
             app.UserMvcWithRouting();
         }
     }

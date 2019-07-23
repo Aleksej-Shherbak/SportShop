@@ -10,6 +10,7 @@ namespace Domains.Concrete
         private readonly string _connectionString;
 
         public DbSet<Product> Products { get; set; }
+        public DbSet<User> Users { get; set; }
 
         public ApplicationContext(IConfiguration configuration)
         {
