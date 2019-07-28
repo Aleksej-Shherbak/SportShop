@@ -34,21 +34,21 @@ namespace Web.Controllers
             {
                 User user = _userRepository.Users.FirstOrDefault(u =>
                     u.Email == model.Email && u.Password == model.Password);
-                
+
                 if (user != null)
                 {
-                    await Authenticate(model.Email); 
+                    await Authenticate(model.Email);
 
                     return RedirectToAction("Index", "Admin");
                 }
 
                 ModelState.AddModelError("", "Wrong email or password");
             }
-            
+
             return View(model);
         }
 
-        
+
         private async Task Authenticate(string userName)
         {
             var claims = new List<Claim>

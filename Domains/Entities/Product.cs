@@ -25,6 +25,8 @@ namespace Domains.Entities
         
         public DateTime CreatedAt { get; set; }
 
+        public string Image { get; set; }
+
         public Product()
         {
             CreatedAt = DateTime.UtcNow;

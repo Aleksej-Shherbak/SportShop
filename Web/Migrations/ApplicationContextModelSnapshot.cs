@@ -32,6 +32,8 @@ namespace Domains.Migrations
                     b.Property<string>("Description")
                         .IsRequired();
 
+                    b.Property<string>("Image");
+
                     b.Property<string>("Name")
                         .IsRequired();
 

@@ -7,10 +7,11 @@
 
 <script>
     $("form").validate();
-</script> 
+</script>
 
 <div class="card ">
-    @using (Html.BeginForm("Edit", "Admin"))
+    @using (Html.BeginForm("Edit", "Admin",
+        FormMethod.Post, new {enctype = "multipart/form-data"}))
     {
         <div class="card-header">
             @if (string.IsNullOrEmpty(Model.Name))
@@ -50,6 +51,32 @@
                         @Html.ValidationMessage(property.PropertyName)
                     </div>
                 </div>
+            }
+
+            <div class="form-group">
+                <div style="position: relative">
+
+                    <label>Image</label>
+                    <a class="btn btn-primary" href="javascript:;">
+                        Choise file ...
+                        <input type="file" name="Image" size="40"
+                               style="position: absolute; z-index: 2; top: 0; left: 0;
+                                                filter: alpha(opacity=0); opacity: 0; 
+                                                background-color: transparent; color: transparent;"
+                               onchange='$("#upload-file-info").html(this.files[0].name)'/>
+                    </a>
+                </div>
+
+                <span class="label label-info" id="upload-file-info"></span>
+            </div>
+
+            @if (Model.Image == null)
+            {
+                <p>No image...</p>
+            }
+            else
+            {
+                <img class="img-thumbnail" width="150" height="150" src="@Model.Image" alt="@Model.Name"/>
             }
         </div>
         <div class="card-footer d-flex flex-row justify-content-center">

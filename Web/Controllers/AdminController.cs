@@ -1,9 +1,13 @@
+using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Domains.Abstract;
 using Domains.Entities;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Hosting;
 
 namespace Web.Controllers
 {
@@ -11,11 +15,13 @@ namespace Web.Controllers
     public class AdminController : Controller
     {
         private readonly IProductRepository _repository;
-        
-        
-        public AdminController(IProductRepository repository)
+        private readonly IHostingEnvironment _hostingEnvironment;
+
+
+        public AdminController(IProductRepository repository, IHostingEnvironment hostingEnvironment)
         {
             _repository = repository;
+            _hostingEnvironment = hostingEnvironment;
         }
 
         public ViewResult Index()
@@ -26,22 +32,43 @@ namespace Web.Controllers
         public ViewResult Edit(int id)
         {
             Product product = _repository.Products.FirstOrDefault(p => p.Id == id);
-            
+
             return View(product);
         }
-        
+
         [HttpPost]
-        public ActionResult Edit(Product product)
+        public async Task<ActionResult> Edit(Product product, IFormFile image)
         {
             if (ModelState.IsValid)
             {
+                if (image != null)
+                {
+                    string extension = Path.GetExtension(image.FileName);
+
+                    var fileName = Guid.NewGuid() + extension;
+
+                    var path = "/Files/" + fileName;
+
+                    if (!Directory.Exists(_hostingEnvironment.WebRootPath + "/Files/"))
+                    {
+                        Directory.CreateDirectory(_hostingEnvironment.WebRootPath + "/Files/");
+                    }
+
+                    using (var fileStream = new FileStream(_hostingEnvironment.WebRootPath + path, FileMode.Create))
+                    {
+                        await image.CopyToAsync(fileStream);
+                    }
+
+                    product.Image = path;
+                }
+
                 _repository.SaveProduct(product);
-                
+
                 TempData["message"] = $"{product.Name} has been saved";
-                
-                return RedirectToAction("Index","Admin");
+
+                return RedirectToAction("Index", "Admin");
             }
-            
+
             return View(product);
         }
 

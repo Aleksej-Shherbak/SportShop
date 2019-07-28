@@ -40,6 +40,7 @@ namespace Domains.Concrete
                     dbEntity.Description = product.Description;
                     dbEntity.Price = product.Price;
                     dbEntity.Category = product.Category;
+                    dbEntity.Image = product.Image;
                 }
             }
 
