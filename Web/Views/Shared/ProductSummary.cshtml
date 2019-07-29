@@ -2,14 +2,16 @@
 
 <div class="row border-bottom mb-2">
     <div class="col-10">
-        <h4>
-            <p>
+            <h4>
                 <strong>@Model.Name</strong>
-            </p>
-            <p>
-                @Model.Description
-            </p>
-        </h4>
+            </h4>
+        <p>
+            @if (Model?.Image != null)
+            {
+                <img style="float: left; max-width: 200px;" class="mr-2" src="@Model.Image" alt="@Model.Name">
+            }
+            @Model.Description
+        </p>
     </div>
     <div class="col-2 d-flex flex-column align-items-start ">
         <span class="alert-primary box-shadow mb-1 p-1">@Model.Price.ToString("c") </span>

@@ -1,17 +1,13 @@
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Domains.Abstract;
 using Domains.Entities;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Moq;
 using NUnit.Framework;
-using NUnit.Framework.Internal;
 using Web.Controllers;
 
 namespace Tests
@@ -134,7 +130,7 @@ namespace Tests
             {
                 Price = 2, Name = "Test"
             };
-            
+
             Mock<IProductRepository> mock = new Mock<IProductRepository>();
             mock.Setup(m => m.Products).Returns(new Product[]
             {
@@ -142,14 +138,14 @@ namespace Tests
                 product,
                 new Product {Id = 2, Name = "P2"}
             });
-            
+
             AdminController controller = new AdminController(mock.Object, null);
             var httpContext = new DefaultHttpContext();
             var tempData = new TempDataDictionary(httpContext, Mock.Of<ITempDataProvider>());
             controller.TempData = tempData;
 
             await controller.Delete(product.Id);
-            
+
             mock.Verify(m => m.DeleteProductAsync(product.Id));
         }
     }

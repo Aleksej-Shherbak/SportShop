@@ -17,7 +17,6 @@ namespace Web.Controllers
         private readonly IProductRepository _repository;
         private readonly IHostingEnvironment _hostingEnvironment;
 
-
         public AdminController(IProductRepository repository, IHostingEnvironment hostingEnvironment)
         {
             _repository = repository;
@@ -54,7 +53,17 @@ namespace Web.Controllers
                         Directory.CreateDirectory(_hostingEnvironment.WebRootPath + "/Files/");
                     }
 
-                    using (var fileStream = new FileStream(_hostingEnvironment.WebRootPath + path, FileMode.Create))
+                    Product oldProduct = _repository.Products.FirstOrDefault(p => p.Id == product.Id);
+
+                    // delete old image
+                    if (oldProduct != null && 
+                        System.IO.File.Exists(_hostingEnvironment.WebRootPath + oldProduct.Image))
+                    {
+                        System.IO.File.Delete(_hostingEnvironment.WebRootPath + oldProduct.Image);
+                    }
+
+                    using (var fileStream = new FileStream(_hostingEnvironment.WebRootPath + path,
+                        FileMode.Create))
                     {
                         await image.CopyToAsync(fileStream);
                     }
@@ -80,6 +89,13 @@ namespace Web.Controllers
             if (deletedProduct != null)
             {
                 TempData["message"] = $"{deletedProduct.Name} was deleted";
+            }
+
+            // delete image 
+            if (!string.IsNullOrEmpty(deletedProduct?.Image) &&
+                System.IO.File.Exists(_hostingEnvironment.WebRootPath + deletedProduct.Image))
+            {
+                System.IO.File.Delete(_hostingEnvironment.WebRootPath + deletedProduct.Image);
             }
 
             return RedirectToAction("Index");

@@ -6,7 +6,7 @@
 }
 
 <script>
-    $("form").validate();
+    $("form").validate({ ignore: ".ignore" });
 </script>
 
 <div class="card ">
@@ -30,13 +30,13 @@
 
             @foreach (var property in ViewData.ModelMetadata.Properties)
             {
-                if (property.Name == "Id" || property.Name == "CreatedAt")
+                if (property.Name == "Id" || property.Name == "CreatedAt" || property.Name == "Image")
                 {
                     continue;
                 }
 
                 <div class="form-group">
-                    <label@(property.DisplayName ?? property.Name)></label>
+                    <label>@(property.DisplayName ?? property.Name)</label>
                     @if (property.PropertyName == "Description")
                     {
                         @Html.TextArea(property.PropertyName, null,
@@ -59,7 +59,7 @@
                     <label>Image</label>
                     <a class="btn btn-primary" href="javascript:;">
                         Choise file ...
-                        <input type="file" name="Image" size="40"
+                        <input class="ignore" type="file" name="Image" size="40"
                                style="position: absolute; z-index: 2; top: 0; left: 0;
                                                 filter: alpha(opacity=0); opacity: 0; 
                                                 background-color: transparent; color: transparent;"
