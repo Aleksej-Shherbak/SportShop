@@ -6,6 +6,22 @@ networks:
     
 services:
 
+  dot_net:
+    image: dot_net:latest
+    depends_on:
+      - "db"
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:80"
+    environment:
+      DB_CONNECTION_STRING: "host=localhost;port=5432;database=sportshop;username=sportshop;password=sportshop"
+    networks:
+      - dockerapi-dev
+    volumes:
+      - ./:/app
+
   db:
     image: postgres:latest
     ports:
