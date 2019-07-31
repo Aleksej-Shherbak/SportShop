@@ -14,7 +14,7 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "8000:80"
+      - "8000:5000"
     environment:
       DB_CONNECTION_STRING: "host=localhost;port=5432;database=sportshop;username=sportshop;password=sportshop"
     networks:

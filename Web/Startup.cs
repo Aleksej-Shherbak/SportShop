@@ -43,13 +43,15 @@ namespace Web
             
             services.AddScoped<Cart>(CartSession.GetCart);
 
+            services.AddRouting(options => options.LowercaseUrls = true);
+            
             services.AddMvc(
                 options =>
                 {
                     options.EnableEndpointRouting = true;
 
                 }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-
+            
             services.AddEntityFrameworkNpgsql()
                 .AddDbContext<ApplicationContext>()
                 .BuildServiceProvider();

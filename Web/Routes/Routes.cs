@@ -9,7 +9,7 @@ namespace Web.Routes
             app.UseMvc(routes =>
             {
                 // /
-                routes.MapRoute("home", "", new
+                routes.MapRoute("home", "~/", new
                 {
                     controller = "Products",
                     action = "List",
@@ -18,7 +18,7 @@ namespace Web.Routes
 
                 // Page2
                 routes.MapRoute(null,
-                    "Page{page}",
+                    "page{page}",
                     new
                     {
                         controller = "Products",
@@ -40,7 +40,7 @@ namespace Web.Routes
 
                 // Category/Page2
                 routes.MapRoute(null,
-                    "{category}/Page{page}",
+                    "{category}/page{page}",
                     new
                     {
                         controller = "Products",
@@ -51,7 +51,7 @@ namespace Web.Routes
                         page = @"\d+"
                     });
 
-                routes.MapRoute(null, "{controller}/{action}");
+                routes.MapRoute(null, "{controller}/{action}", new { action = "index"});
             });
         }
     }
